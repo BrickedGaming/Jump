@@ -6,6 +6,49 @@ SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 600
 FrameRateTick = 20
 clock = pygame.time.Clock()
+is_started = False
+button = CustomButtonClass()
+menu = True
+
+
+class Button1():
+    def __init__(self):
+        self.image = pygame.image.load("Assets/StartButton.png").convert_alpha()
+        self.rect = self.image.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
+        self.clicked = False
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+        action = False
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 2 and self.clicked == False:
+                action = True
+                self.clicked = True
+
+            if pygame.mouse.get_pressed()[0] == 0:
+                self.clicked = False
+
+        return action
+
+    class Button2():
+        def __init__(self):
+            self.image = pygame.image.load("Assets/StartButton.png").convert_alpha()
+            self.rect = self.image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.clicked = False
+
+        def draw(self, screen):
+            screen.blit(self.image, self.rect)
+            action = False
+            pos = pygame.mouse.get_pos()
+            if self.rect.collidepoint(pos):
+                if pygame.mouse.get_pressed()[0] == 2 and self.clicked == False:
+                    action = True
+                    self.clicked = True
+
+                if pygame.mouse.get_pressed()[0] == 0:
+                    self.clicked = False
+
+            return action
 
 
 class Player(pygame.sprite.Sprite):
@@ -49,6 +92,12 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
+
+
+class Menu():
+    def __init__(self):
+        self.surf = pygame.image.load("Assets/SplashScreen.png")
+        self.surf.set_colorkey((0, 0, 0), RLEACCEL)
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -163,3 +212,17 @@ while running:
     pygame.display.flip()
 
     clock.tick(FrameRateTick)
+
+while menu:
+    if button.is_pressed:
+        is_started = True
+
+    if is_started == True:
+        player.draw()
+        player.update()
+        enemy_group.update()
+    elif is_started == False:
+        menu.draw()
+        menu.update()
+        if menu.button.is_pressed():
+            is_started = True
